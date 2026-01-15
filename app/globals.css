@@ -1,23 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --dark:#000000;
+  --dark-alternate:#1B1918 ;
+  --primary:#FF5F3F;
+  --primary-light:#F4EBEB ;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-dark: var(--dark);
+  --color-dark-alternate: var(--dark-alternate);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
   --font-poppins: var(--font-poppins);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-* {
-  @apply {--font-poppins}
+/* standard CSS way to apply the font to the whole body */
+body {
+  font-family: var(--font-poppins);
 }

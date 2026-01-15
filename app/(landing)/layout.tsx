@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "../globals.css";
+import Header from "./components/header"
 
 const geistSans = Poppins({
   variable: "--font-poppins",
@@ -20,9 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased`}
-      >
+      {/* Change 'poppins.variable' to 'geistSans.variable' */}
+      <body className={`${geistSans.variable} antialiased`}>
+        <Header />
+        {children}
       </body>
     </html>
   );
