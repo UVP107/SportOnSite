@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --dark:#000000;
-  --dark-alternate:#1B1918 ;
-  --primary:#FF5F3F;
-  --primary-light:#F4EBEB ;
+  --dark: #000000;
+  --dark-alternate: #1b1918;
+  --primary: #ff5f3f;
+  --primary-light: #f4ebeb;
 }
 
 @theme inline {
@@ -15,7 +15,25 @@
   --font-poppins: var(--font-poppins);
 }
 
-/* standard CSS way to apply the font to the whole body */
 body {
   font-family: var(--font-poppins);
+}
+
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: var(--font-poppins);
+  overflow-x: hidden;
 }
