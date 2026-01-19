@@ -1,10 +1,13 @@
-import Image from "next/image";
-import { MdOutlineShoppingCart } from "react-icons/md";
+import HeroSection from "./components/home/hero";
+import CategoriesSection from "./components/home/categories";
+import ProductsSection from "./components/home/products";
 
 export default function Home() {
   return (
     <main>
-      <h1 className="font-extrabold">halo apakah ini poopins?</h1>
+      <HeroSection />
+      <CategoriesSection />
+      <ProductsSection />
     </main>
   );
 }
