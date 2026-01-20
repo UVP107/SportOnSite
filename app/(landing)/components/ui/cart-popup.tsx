@@ -3,7 +3,21 @@ import priceFormatter from "../../utils/price-formatter";
 import Button from "./button";
 import { FiArrowRight, FiTrash2 } from "react-icons/fi";
 
-const cartList = [
+export const cartList = [
+  {
+    name: "SportsOn Product 2",
+    category: "Running",
+    price: 222000,
+    qty: 1,
+    imgUrl: "product-1.png",
+  },
+  {
+    name: "SportsOn Product 3",
+    category: "Running",
+    price: 333000,
+    qty: 1,
+    imgUrl: "product-3.png",
+  },
   {
     name: "SportsOn Product 4",
     category: "Running",
@@ -27,19 +41,22 @@ const cartList = [
   },
 ];
 
-const totalPrice = cartList.reduce(
+export const totalPrice = cartList.reduce(
   (acc, item) => acc + item.price * item.qty,
   0,
 );
 
 const CartPopup = () => {
   return (
-    <div className="absolute bg-white right-0 top-12 shadow-xl shadow-black/10 border border-gray-200 w-90 z-10">
+    <div className="absolute bg-white right-0 top-12 rounded-xl shadow-xl shadow-black/10 border border-gray-200 w-90 z-10 overflow-auto max-h-87">
       <div className="p-4 border-b border-gray-200 font-bold text-center">
         Shopping Cart
       </div>
       {cartList.map((item, index) => (
-        <div key={index} className="border-b border-gray-200 p-4 flex gap-3">
+        <div
+          key={index}
+          className="border-b border-gray-200 p-4 flex gap-3 key={index}"
+        >
           <div className="bg-primary-light aspect-square w-16 flex justify-center items-center">
             <Image
               src={`/images/products/${item.imgUrl}`}
@@ -49,20 +66,22 @@ const CartPopup = () => {
               className="aspect-square object-contain"
             />
           </div>
-          <div className="self-center">
-            <div className="text-sm font-medium">{item.name}</div>
-            <div className="flex gap-3  font-medium text-xs">
-              <div>{item.qty}x</div>
-              <div className="font-medium text-primary">
-                {priceFormatter(item.price)}
+          <div className="flex-1 flex justify-between items-center">
+            <div className="self-center">
+              <div className="text-sm font-medium">{item.name}</div>
+              <div className="flex gap-3  font-medium text-xs">
+                <div>{item.qty}x</div>
+                <div className="font-medium text-primary">
+                  {priceFormatter(item.price)}
+                </div>
               </div>
             </div>
             <Button
               size="small"
               variant="ghost"
-              className="w-7 h-7 p0! self-center ml-auto"
+              className="w-7 h-7 p-0! self-center ml-auto"
             >
-              <FiTrash2 />
+              <FiTrash2 size={16} />
             </Button>
           </div>
         </div>

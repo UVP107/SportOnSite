@@ -11,7 +11,6 @@ const HeroSection = () => {
       className="container mx-auto min-h-screen flex relative overflow-hidden px-4"
     >
       <div className="relative self-center w-full grid lg:grid-cols-2 items-center">
-        {/* Left Image (Background Ornament) */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -27,7 +26,6 @@ const HeroSection = () => {
           />
         </motion.div>
 
-        {/* Content Area */}
         <div className="relative z-10 lg:ml-20">
           <motion.div
             initial={{ opacity: 0 }}
@@ -92,7 +90,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Decorative Ornament */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
