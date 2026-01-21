@@ -58,7 +58,8 @@ const ProductsSection = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <Link
-              href="#"
+              href={`/product/${product.name}`}
+              key={index}
               className="p-1.5 bg-white block hover:drop-shadow-xl duration-300 group"
             >
               <div className="bg-primary-light aspect-square w-full flex justify-center items-center relative overflow-hidden">
