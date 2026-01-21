@@ -7,6 +7,7 @@ import {
 } from "react-icons/fi";
 import Button from "../components/ui/button";
 import { useState, ChangeEvent } from "react";
+import { useRouter } from "next/navigation";
 
 const ProductActions = () => {
   const [qty, setQty] = useState<number | string>(1);
@@ -30,6 +31,10 @@ const ProductActions = () => {
       setQty(1);
     }
   };
+
+  const goToCheckout = () => {};
+
+  const { push } = useRouter();
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap gap-5">
@@ -70,6 +75,7 @@ const ProductActions = () => {
       <Button
         variant="dark"
         className="w-full flex items-center justify-center gap-2 py-4"
+        onClick={() => push("/checkout")}
       >
         <span className="whitespace-nowrap">Checkout Now</span>
         <FiArrowRight size={20} />
