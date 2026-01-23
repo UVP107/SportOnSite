@@ -5,10 +5,12 @@ import Button from "../ui/button";
 import CardWithHeader from "../ui/card-with-header";
 import FileUpload from "../ui/file-upload";
 import priceFormatter from "../../utils/price-formatter";
-import { totalPrice } from "../ui/cart-popup";
+import totalPrice from "../../utils/total-price";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "@/app/hooks/use-cart-store";
 
 const PaymentSteps = () => {
+  const { items } = useCartStore();
   const uploadAndConfirm = () => {
     push("/order-status/123123");
   };
@@ -41,7 +43,7 @@ const PaymentSteps = () => {
         <div className="flex justify-between">
           <div className="text-sm">Total</div>
           <div className="text-primary text-xs">
-            {priceFormatter(totalPrice)}
+            {priceFormatter(totalPrice(items))}
           </div>
         </div>
         <Button

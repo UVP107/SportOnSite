@@ -3,70 +3,31 @@ import priceFormatter from "../../utils/price-formatter";
 import Button from "./button";
 import { FiArrowRight, FiTrash2 } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-
-export const cartList = [
-  {
-    name: "SportsOn Product 2",
-    category: "Running",
-    price: 222000,
-    qty: 1,
-    imgUrl: "product-1.png",
-  },
-  {
-    name: "SportsOn Product 3",
-    category: "Running",
-    price: 333000,
-    qty: 1,
-    imgUrl: "product-3.png",
-  },
-  {
-    name: "SportsOn Product 4",
-    category: "Running",
-    price: 444000,
-    qty: 1,
-    imgUrl: "product-4.png",
-  },
-  {
-    name: "SportsOn Product 5",
-    category: "Running",
-    price: 555000,
-    qty: 2,
-    imgUrl: "product-5.png",
-  },
-  {
-    name: "SportsOn Product 6",
-    category: "Running",
-    price: 666000,
-    qty: 3,
-    imgUrl: "product-6.png",
-  },
-];
-
-export const totalPrice = cartList.reduce(
-  (acc, item) => acc + item.price * item.qty,
-  0,
-);
+import { useCartStore } from "@/app/hooks/use-cart-store";
+import { getImageUrl } from "@/app/lib/api";
+import totalPrice from "../../utils/total-price";
 
 const CartPopup = () => {
+  const { push } = useRouter();
+  const { items, removeItem } = useCartStore();
+
   const handleCheckout = () => {
     push("/checkout");
   };
 
-  const { push } = useRouter();
-
   return (
-    <div className="absolute bg-white right-0 top-12 rounded-xl shadow-xl shadow-black/10 border border-gray-200 w-90 z-10 overflow-auto max-h-87">
+    <div className="absolute bg-white right-0 top-12 rounded-xl shadow-xl shadow-black/10 border border-gray-200 w-90 z-50 overflow-auto max-h-87">
       <div className="p-4 border-b border-gray-200 font-bold text-center">
         Shopping Cart
       </div>
-      {cartList.map((item, index) => (
+      {items.length ? items.map((item, index) => (
         <div
           key={index}
           className="border-b border-gray-200 p-4 flex gap-3 key={index}"
         >
           <div className="bg-primary-light aspect-square w-16 flex justify-center items-center">
             <Image
-              src={`/images/products/${item.imgUrl}`}
+              src={getImageUrl(item.imageUrl)}
               alt={item.name}
               width={63}
               height={63}
@@ -87,17 +48,23 @@ const CartPopup = () => {
               size="small"
               variant="ghost"
               className="w-7 h-7 p-0! self-center ml-auto"
+              onClick={() => removeItem(item._id)}
             >
               <FiTrash2 size={16} />
             </Button>
           </div>
         </div>
-      ))}
+      )): (
+        <div className="text-center opacity-50 py-5">
+          Your shopping cart is empty
+        </div>
+      )
+      }
       <div className="border-t border-gray-200 p-4">
         <div className="flex justify-between">
           <div className="text-sm">Total</div>
           <div className="text-primary text-xs">
-            {priceFormatter(totalPrice)}
+            {priceFormatter(totalPrice(items))}
           </div>
         </div>
         <Button

@@ -42,4 +42,3 @@ next-env.d.ts
 
 # Local scripts
 commit-push.sh
-commit-push-dev.sh
