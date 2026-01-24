@@ -10,7 +10,6 @@ const OrderSubmitted = () => {
 
   return (
     <main className="bg-gray-100 flex flex-col items-center justify-center p-6">
-      {/* <h1 className="text-5xl font-bold text-center mb-12">Order Status</h1> */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm w-full max-w-2xl overflow-hidden mx-auto">
         <div className="p-10 md:p-16 flex flex-col items-center text-center">
           <div className="mb-8">

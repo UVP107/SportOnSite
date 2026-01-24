@@ -3,17 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { Category } from "@/app/types";
+import { getImageUrl } from "@/app/lib/api";
 
-const categoryList = [
-  { name: "Running", imgUrl: "category-running.png" },
-  { name: "Tennis", imgUrl: "category-tennis.png" },
-  { name: "Basketball", imgUrl: "category-basketball.png" },
-  { name: "Football", imgUrl: "category-football.png" },
-  { name: "Badminton", imgUrl: "category-badminton.png" },
-  { name: "Swimming", imgUrl: "category-swimming.png" },
-];
+type TCategoriesProps = {
+  categories: Category[];
+};
 
-const CategoriesSection = () => {
+const CategoriesSection = ({ categories }: TCategoriesProps) => {
   return (
     <section id="category-section" className="container mx-auto pb-20">
       <div className="flex justify-between">
@@ -25,9 +22,9 @@ const CategoriesSection = () => {
       </div>
 
       <div className="grid grid-cols-6 gap-12 mt-8">
-        {categoryList.map((category, index) => (
+        {categories.map((category) => (
           <motion.div
-            key={index}
+            key={category._id}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -35,7 +32,7 @@ const CategoriesSection = () => {
           >
             <div className="self-center flex flex-col items-center">
               <Image
-                src={`/images/categories/${category.imgUrl}`}
+                src={getImageUrl(category.imageUrl)}
                 width={86}
                 height={86}
                 alt={category.name}

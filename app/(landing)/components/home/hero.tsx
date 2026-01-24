@@ -8,25 +8,10 @@ const HeroSection = () => {
   return (
     <section
       id="hero-section"
-      className="container mx-auto min-h-screen flex relative overflow-hidden px-4"
+      className="container mx-auto min-h-screen flex relative overflow-hidden px-4 pb-20"
     >
-      <div className="relative self-center w-full grid lg:grid-cols-2 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="absolute left-0 -top-20 pointer-events-none"
-        >
-          <Image
-            src="/images/img-basketball.png"
-            width={432}
-            height={423}
-            alt="image sporton"
-            className="grayscale opacity-50 lg:opacity-100"
-          />
-        </motion.div>
-
-        <div className="relative z-10 lg:ml-20">
+      <div className="relative z-20 self-center w-full grid lg:grid-cols-2 items-center">
+        <div className="relative z-50 lg:ml-20 lg:-mr-64">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -71,8 +56,23 @@ const HeroSection = () => {
           </div>
         </div>
 
+        <motion.div
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="absolute left-0 -top-20 pointer-events-none"
+        >
+          <Image
+            src="/images/img-basketball.png"
+            width={432}
+            height={423}
+            alt="image sporton"
+            className="grayscale opacity-50 lg:opacity-100 -z-10"
+          />
+        </motion.div>
+
         {/* Hero Image Right */}
-        <div className="hidden lg:block relative h-full">
+        <div className="hidden lg:block relative h-full z-0 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}

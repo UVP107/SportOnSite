@@ -19,9 +19,9 @@ const Footer = () => {
         </div>
         <div className="w-105 grid grid-cols-2">
           <div className="flex gap-7 flex-col">
-            <Link href="#">Home</Link>
-            <Link href="#">Categories</Link>
-            <Link href="#">Products</Link>
+            <Link href="/">Home</Link>
+            <Link href="/">Categories</Link>
+            <Link href="/">Products</Link>
             <Link href="#">About Us</Link>
           </div>
           <div className="flex gap-7 flex-col">

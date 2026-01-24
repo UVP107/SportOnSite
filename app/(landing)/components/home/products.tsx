@@ -4,62 +4,39 @@ import Link from "next/link";
 import Button from "../ui/button";
 import { FiPlus } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { Product } from "@/app/types";
+import { getImageUrl } from "@/app/lib/api";
+import { useCartStore } from "@/app/hooks/use-cart-store";
+import React from "react";
 
-const productList = [
-  {
-    name: "SportsOn Product 1",
-    category: "Running",
-    price: 111000,
-    imgUrl: "product-1.png",
-  },
-  {
-    name: "SportsOn Product 2",
-    category: "Running",
-    price: 222000,
-    imgUrl: "product-1.png",
-  },
-  {
-    name: "SportsOn Product 3",
-    category: "Running",
-    price: 333000,
-    imgUrl: "product-3.png",
-  },
-  {
-    name: "SportsOn Product 4",
-    category: "Running",
-    price: 444000,
-    imgUrl: "product-4.png",
-  },
-  {
-    name: "SportsOn Product 5",
-    category: "Running",
-    price: 555000,
-    imgUrl: "product-5.png",
-  },
-  {
-    name: "SportsOn Product 6",
-    category: "Running",
-    price: 666000,
-    imgUrl: "product-6.png",
-  },
-];
+type TProductProps = {
+  products: Product[];
+};
 
-const ProductsSection = () => {
+const ProductsSection = ({ products }: TProductProps) => {
+  const { addItem } = useCartStore();
+
+  const handleAddtoCart = (e: React.MouseEvent, product: Product) => {
+    e.stopPropagation();
+    e.preventDefault();
+    addItem(product, 1);
+  };
+
   return (
     <section id="products-section" className="container mx-auto mt-32 mb-52">
       <h2 className="font-bold italic text-4xl text-center mb-11">
         <span className="text-primary">OUR </span>PRODUCTS
       </h2>
       <div className="grid grid-cols-4 gap-5">
-        {productList.map((product, index) => (
+        {products.map((product) => (
           <motion.div
-            key={index}
+            key={product._id}
             whileHover={{ y: -10 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <Link
-              href={`/product/${product.name}`}
-              key={index}
+              href={`/product/${product._id}`}
+              key={product._id}
               className="p-1.5 bg-white block hover:drop-shadow-xl duration-300 group"
             >
               <div className="bg-primary-light aspect-square w-full flex justify-center items-center relative overflow-hidden">
@@ -68,7 +45,7 @@ const ProductsSection = () => {
                   transition={{ duration: 0.4 }}
                 >
                   <Image
-                    src={`/images/products/${product.imgUrl}`}
+                    src={getImageUrl(product.imageUrl)}
                     alt={product.name}
                     width={300}
                     height={300}
@@ -76,7 +53,10 @@ const ProductsSection = () => {
                   />
                 </motion.div>
 
-                <Button className="w-10 h-10 p-2! absolute right-3 top-3 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                <Button
+                  className="w-10 h-10 p-2! absolute right-3 top-3 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                  onClick={(e) => handleAddtoCart(e, product)}
+                >
                   <FiPlus size={24} />
                 </Button>
               </div>
@@ -84,7 +64,7 @@ const ProductsSection = () => {
                 {product.name}
               </h3>
               <div className="flex justify-between mb-8">
-                <div className="text-gray-500">{product.category}</div>
+                <div className="text-gray-500">{product.category.name}</div>
                 <div className="font-medium text-primary">
                   {Intl.NumberFormat("id-ID", {
                     style: "currency",
