@@ -56,7 +56,7 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
-      reset: () => set({ items: [] }),
+      reset: () => set({ items: [], customerInfo: null }),
     }),
     {
       name: "cart-storage",
