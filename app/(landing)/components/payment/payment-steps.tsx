@@ -10,7 +10,7 @@ import { getImageUrl } from "@/app/lib/api";
 import totalPrice from "../../utils/total-price";
 
 type TCartItems = {
-  handlePayment: () => void;
+  handlePayment?: () => void;
 };
 
 const CartItems = ({ handlePayment }: TCartItems) => {
@@ -18,9 +18,6 @@ const CartItems = ({ handlePayment }: TCartItems) => {
 
   return (
     <CardWithHeader title="Cart Items">
-      {/* Removed h-full and justify-between here. 
-         The max-h handles the scrolling for long lists.
-      */}
       <div className="overflow-auto max-h-[400px]">
         {items.map((item) => (
           <div
@@ -58,8 +55,6 @@ const CartItems = ({ handlePayment }: TCartItems) => {
           </div>
         ))}
       </div>
-
-      {/* Footer Section stays outside the scrollable area */}
       <div className="border-t border-gray-200 p-4 bg-white">
         <div className="flex justify-between">
           <div className="text-sm">Total</div>
