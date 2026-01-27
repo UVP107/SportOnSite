@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ProductActions from "../../product-detail/product-actions";
 import priceFormatter from "../../utils/price-formatter";
-import { getProductDetail } from "@/app/services/product-services";
+import { getProductDetails } from "@/app/services/product-services";
 import { getImageUrl } from "@/app/lib/api";
 
 export type TPageProps = {
@@ -10,7 +10,7 @@ export type TPageProps = {
 
 const ProductDetail = async ({ params }: TPageProps) => {
   const { id } = await params;
-  const product = await getProductDetail(id);
+  const product = await getProductDetails(id);
 
   return (
     <main className="container mx-auto py-40 flex gap-12">
