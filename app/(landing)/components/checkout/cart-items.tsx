@@ -57,9 +57,6 @@ const CartItems = ({ handlePayment }: TCartItems) => {
           ))}
         </div>
 
-        {/* Payment Footer: 
-           mt-auto is the 'magic' that pushes this to the bottom of the min-height container.
-        */}
         <div className="mt-auto border-t border-gray-200 p-5 bg-white">
           <div className="flex justify-between items-center mb-4">
             <div className="text-sm font-semibold text-gray-600">Total</div>

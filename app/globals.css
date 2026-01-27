@@ -50,3 +50,24 @@ body {
 .input-group *:last-child {
   @apply mb-0;
 }
+
+@layer components {
+  .input-group-admin {
+    @apply flex flex-col gap-1.5 w-full;
+  }
+
+  .input-group-admin label {
+    @apply text-sm font-semibold text-gray-700;
+  }
+
+  .input-group-admin input,
+  .input-group-admin textarea,
+  .input-group-admin select {
+    @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 
+           focus:border-primary focus:ring-1 focus:ring-primary 
+           outline-none transition-all placeholder:text-gray-300;
+  }
+  .input-group-admin textarea {
+    @apply resize-none;
+  }
+}
