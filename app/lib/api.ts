@@ -4,18 +4,22 @@ export async function fetchAPI<T>(
 ): Promise<T> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
     ...options,
-    cache: options?.cache || "no-cache", // no cache = real time data
+    cache: options?.cache || "no-cache",  // no cache = real time data
   });
+
   if (!res.ok) {
-    let errorMessage = `An error occurred while fetching data from ${endpoint}`;
+    let errorMessage = `API Error (${res.status}): ${endpoint}`;
+
     try {
       const errorData = await res.json();
       errorMessage = errorData.message || errorData.error || errorMessage;
     } catch (e) {
-      console.log(e);
+      console.error("Failed to parse error JSON", e);
     }
-    throw new Error(errorMessage);
+    console.error("FetchAPI failure:", errorMessage);
+    return Promise.reject(new Error(errorMessage));
   }
+
   return res.json();
 }
 
