@@ -4,88 +4,97 @@ import Button from "@/app/(landing)/components/ui/button";
 import { login } from "@/app/services/auth-services";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [IsLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
-      router.push("/admin/products");
+      router.replace("/admin/products");
     }
   }, [router]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
+    setErrorMessage("");
+
     try {
       const data = await login({ email, password });
-
       if (data.token) {
-        router.push("/admin/products");
+        localStorage.setItem("token", data.token);
+        Cookies.set("token", data.token, { expires: 7 });
+        router.replace("/admin/products");
       }
     } catch (err: unknown) {
-      setErrorMessage(
-        err instanceof Error && err.message
-          ? err.message
-          : "Something went wrong, please try again later.",
-      );
-      console.error("Login error", err);
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage("An unexpected error occurred");
+      }
+      console.error("Login Error:", err);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
-    <main className="bg-[#F7F9FA] w-full min-h-screen flex justify-center items-center">
-      <div className="max-w-136 w-full bg-white rounded-xl border-t-4 border-primary py-12 px-18 shadow-[0px_8px_18px_0px_rgba(0,0,0,0.06)]">
+    <main className="bg-[#F7F9FA] w-full min-h-screen flex justify-center items-center p-4">
+      <div className="w-full max-w-lg bg-white rounded-xl border-t-4 border-primary py-12 px-6 md:px-12 shadow-sm">
         <Image
           src="/images/sporton-admin.svg"
-          alt="logo admin"
+          alt="logo"
           width={304}
           height={51}
-          className="mx-auto mb-4"
+          priority
+          className="mx-auto mb-4 h-auto w-auto"
         />
-        <p className="opacity-50 text-sm text-center mb-9">
-          Enter your credentials to access the dashboard
-        </p>
 
-        {errorMessage && (
-          <div className="px-3 py-1 bg-primary-light border border-primary rounded-md text-primary text-sm text-center w-full mb-2">
-            {errorMessage}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="input-group-admin">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
           </div>
-        )}
 
-        <div className="input-group-admin mb-5">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Please type your email"
-            className="rounded-lg!"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="input-group-admin mb-12">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="••••••••••••••••••••"
-            className="rounded-lg!"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <Button className="w-full rounded-lg! mb-8" onClick={handleLogin}>
-          {IsLoading ? "Signing in ..." : "Sign In"}
-        </Button>
+          <div className="input-group-admin">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              className="w-full"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+          </div>
+
+          {errorMessage && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm text-center">
+              {errorMessage}
+            </div>
+          )}
+
+          <Button className="w-full" type="submit" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign In"}
+          </Button>
+        </form>
       </div>
     </main>
   );
