@@ -93,7 +93,7 @@ const TransactionModal = ({
               >
                 <div className="bg-gray-100 rounded aspect-square w-8 h-8">
                   <Image
-                    src={getImageUrl(item.productId.imageUrl)}
+                    src={getImageUrl(item.productId?.imageUrl)}
                     width={30}
                     height={30}
                     alt="product image"

@@ -19,7 +19,6 @@ const CategoryManagement = () => {
     null,
   );
   const [categories, setCategories] = useState<Category[]>([]);
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDeleteId, setCategoryToDeleteId] = useState("");
 
@@ -51,7 +50,7 @@ const CategoryManagement = () => {
       toast.success("Category deleted successfully");
       setIsDeleteModalOpen(false);
       setCategoryToDeleteId("");
-      fetchCategories(); 
+      fetchCategories();
     } catch (err) {
       console.error("Failed to delete category:", err);
       toast.error("Failed to delete category");

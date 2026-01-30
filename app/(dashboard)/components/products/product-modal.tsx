@@ -2,7 +2,7 @@
 
 import Button from "@/app/(landing)/components/ui/button";
 import Modal from "../ui/modal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ImageUploadPreview from "../ui/image-upload-review";
 import { Category, Product } from "@/app/types";
 import { toast } from "react-toastify";
@@ -19,8 +19,8 @@ type TProductModalProps = {
 
 type ProductFormData = {
   name: string;
-  price: string;
-  stock: string;
+  price: number;
+  stock: number;
   categoryId: string;
   description: string;
 };
@@ -40,45 +40,43 @@ const ProductModal = ({
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
-    price: "",
-    stock: "",
+    price: 0,
+    stock: 0,
     categoryId: "",
     description: "",
   });
 
-  // Fetch categories for the dropdown
-  useEffect(() => {
-    let isMounted = true;
-    const fetchCats = async () => {
-      try {
-        const data = await getAllCategories();
-        if (isMounted) setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories", error);
-      }
-    };
-    if (isOpen) fetchCats();
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen]);
+  const fetchCategories = useCallback(async () => {
+    try {
+      const data = await getAllCategories();
+      setCategories(data);
+    } catch (err) {
+      console.error("Failed to fetch categories", err);
+    }
+  }, []);
 
-  // Sync form data when editing
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen, fetchCategories]);
+
   useEffect(() => {
     if (isEditMode && isOpen && product) {
       setFormData({
         name: product.name,
-        price: product.price.toString(),
-        stock: product.stock.toString(),
+        price: product.price,
+        stock: product.stock,
         categoryId: product.category?._id || "",
         description: product.description,
       });
       setImagePreview(product.imageUrl ? getImageUrl(product.imageUrl) : null);
     } else if (isOpen) {
+      // reset form data
       setFormData({
         name: "",
-        price: "",
-        stock: "",
+        price: 0,
+        stock: 0,
         categoryId: "",
         description: "",
       });
@@ -92,8 +90,12 @@ const ProductModal = ({
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    const { id, value, type } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: type === "number" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,8 +104,8 @@ const ProductModal = ({
     try {
       const data = new FormData();
       data.append("name", formData.name);
-      data.append("price", formData.price);
-      data.append("stock", formData.stock);
+      data.append("price", formData.price.toString());
+      data.append("stock", formData.stock.toString());
       data.append("category", formData.categoryId);
       data.append("description", formData.description);
 
@@ -120,8 +122,8 @@ const ProductModal = ({
       toast.success(isEditMode ? "Product updated" : "Product created");
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Submission error:", err);
       toast.error("An error occurred");
     } finally {
       setIsSubmitting(false);
@@ -136,7 +138,6 @@ const ProductModal = ({
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex gap-7">
-          {/* Left Side: Image Upload */}
           <div className="min-w-[200px]">
             <ImageUploadPreview
               label="Product Image"
@@ -148,7 +149,6 @@ const ProductModal = ({
             />
           </div>
 
-          {/* Right Side: Form Fields */}
           <div className="flex flex-col gap-4 w-full">
             <div className="input-group-admin">
               <label htmlFor="name">Product Name</label>
@@ -171,6 +171,7 @@ const ProductModal = ({
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="0"
+                  min="0"
                   required
                 />
               </div>
@@ -182,6 +183,7 @@ const ProductModal = ({
                   value={formData.stock}
                   onChange={handleChange}
                   placeholder="0"
+                  min="0"
                   required
                 />
               </div>
@@ -208,7 +210,6 @@ const ProductModal = ({
           </div>
         </div>
 
-        {/* Bottom: Description */}
         <div className="input-group-admin">
           <label htmlFor="description">Description</label>
           <textarea
