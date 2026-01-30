@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { FiEdit, FiUploadCloud } from "react-icons/fi";
 
 type TImageUploadPreviewProps = {
@@ -18,24 +20,33 @@ const ImageUploadPreview = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageClick = () => {
-    fileInputRef?.current?.click();
+    fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      onChange(file);
-    }
-  };
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        onChange(file);
+      }
+    },
+    [onChange],
+  );
 
   return (
     <div className={className}>
+      {label && (
+        <label className="block text-sm font-medium mb-2 text-gray-700">
+          {label}
+        </label>
+      )}
+
       <div
         onClick={handleImageClick}
-        className="border-2 border-dashed border-primary bg-primary/5 rounded-lg h-50 flex flex-col justify-center items-center"
+        className="cursor-pointer border-2 border-dashed border-primary bg-primary/5 rounded-lg h-50 flex flex-col justify-center items-center overflow-hidden hover:bg-primary/10 transition-colors"
       >
         {value ? (
-          <div className="max-w-47.5 relative">
+          <div className="w-full h-full relative group">
             <Image
               src={value}
               alt="preview product"
@@ -43,17 +54,18 @@ const ImageUploadPreview = ({
               width={190}
               height={190}
             />
-            <div className="opacity-0 hover:opacity-100 absolute top-0 left-0 flex z-50">
-              <FiEdit />
-              Change Image
+            <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+              <FiEdit size={20} />
+              <span className="text-xs mt-1">Change Image</span>
             </div>
           </div>
         ) : (
-          <>
+          <div className="flex flex-col items-center">
             <FiUploadCloud className="text-primary" size={24} />
-            <span className="text-sm font-medium">Click to Upload</span>
-          </>
+            <span className="text-sm font-medium mt-2">Click to Upload</span>
+          </div>
         )}
+
         <input
           type="file"
           ref={fileInputRef}

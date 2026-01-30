@@ -1,7 +1,10 @@
 "use client";
 
 import CardWithHeader from "../ui/card-with-header";
-import { CustomerInfo } from "@/app/hooks/use-cart-store";
+import { CustomerInfo, useCartStore } from "@/app/hooks/use-cart-store";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 type TOrderInformation = {
   formData: CustomerInfo;
@@ -9,6 +12,20 @@ type TOrderInformation = {
 };
 
 const OrderInformation = ({ formData, setFormData }: TOrderInformation) => {
+  const { items } = useCartStore();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    let isRedirecting = false;
+
+    if (items.length === 0 && !isRedirecting) {
+      isRedirecting = true;
+      toast.info("Cart is empty!");
+      const timer = setTimeout(() => push("/"), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [items.length, push]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -31,6 +48,7 @@ const OrderInformation = ({ formData, setFormData }: TOrderInformation) => {
               className="border p-2 rounded-md"
               onChange={handleInputChange}
               value={formData.customerName}
+              required
             />
           </div>
 
@@ -46,6 +64,7 @@ const OrderInformation = ({ formData, setFormData }: TOrderInformation) => {
               className="border p-2 rounded-md"
               onChange={handleInputChange}
               value={formData.customerContact ?? ""}
+              required
             />
           </div>
 
@@ -61,6 +80,7 @@ const OrderInformation = ({ formData, setFormData }: TOrderInformation) => {
               rows={7}
               onChange={handleInputChange}
               value={formData.customerAddress}
+              required
             />
           </div>
         </div>

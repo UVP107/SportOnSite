@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "@/app/(landing)/components/ui/button";
 import Modal from "../ui/modal";
 import { useEffect, useState } from "react";
@@ -40,7 +42,7 @@ const CategoryModal = ({
   });
 
   useEffect(() => {
-    if (isEditMode && isOpen) {
+    if (isEditMode && isOpen && category) {
       setFormData({
         name: category.name,
         description: category.description,
@@ -68,16 +70,19 @@ const CategoryModal = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
+
     try {
       const data = new FormData();
       data.append("name", formData.name);
       data.append("description", formData.description);
+
       if (imageFile) {
         data.append("image", imageFile);
       }
 
-      if (isEditMode) {
+      if (isEditMode && category) {
         await updateCategory(category._id, data);
       } else {
         await createCategory(data);
@@ -89,18 +94,16 @@ const CategoryModal = ({
           : "Category created successfully",
       );
 
-      setFormData({
-        name: "",
-        description: "",
-      });
+      setFormData({ name: "", description: "" });
       setImageFile(null);
       setImagePreview(null);
 
-      onSuccess?.();
+      onSuccess();
       onClose();
-    } catch (error) {
+    } catch (err) {
       console.error(
-        isEditMode ? "Failed to update category" : "Failed to create category", error
+        isEditMode ? "Failed to update category" : "Failed to create category",
+        err,
       );
       toast.error(
         isEditMode ? "Failed to update category" : "Failed to create category",
@@ -109,6 +112,7 @@ const CategoryModal = ({
       setIsSubmitting(false);
     }
   };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -129,14 +133,15 @@ const CategoryModal = ({
           </div>
           <div className="flex flex-col gap-4 w-full">
             <div className="input-group-admin">
-              <label htmlFor="categoryName">Category Name</label>
+              <label htmlFor="name">Category Name</label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="e. g. Running"
+                placeholder="e.g. Running"
+                required
               />
             </div>
 
@@ -149,6 +154,7 @@ const CategoryModal = ({
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Category Details..."
+                required
               ></textarea>
             </div>
           </div>
@@ -156,10 +162,13 @@ const CategoryModal = ({
         <Button
           className="ml-auto mt-3 rounded-lg"
           type="submit"
-          onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isEditMode ? "Update Category" : "Create Category"}
+          {isSubmitting
+            ? "Processing..."
+            : isEditMode
+              ? "Update Category"
+              : "Create Category"}
         </Button>
       </form>
     </Modal>

@@ -5,6 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import "../globals.css";
 import Header from "./components/layouts/header";
 import Footer from "./components/layouts/footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -29,6 +31,7 @@ export default function RootLayout({
         <Header />
         <main className="pt-28">
           {children}
+          <ToastContainer position="top-right" autoClose={3000} />
           <SpeedInsights />
           <Analytics />
         </main>
